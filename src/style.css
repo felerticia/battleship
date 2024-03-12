@@ -9,6 +9,8 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
+  max-width: 1000px;
+  margin: auto;
 }
 
 button {
@@ -31,6 +33,7 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Select Ships */
 #ships {
   vertical-align: bottom;
   display: flex;
@@ -61,6 +64,7 @@ button:focus-visible {
   aspect-ratio: 5/1;
 }
 
+/* Rotated Ships */
 #ships div.rotated {
   width: 20px;
   height: auto;
@@ -79,4 +83,18 @@ button:focus-visible {
 }
 .career.rotated {
   aspect-ratio: 1/5;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  aspect-ratio: 1;
+}
+.board p {
+  grid-column: 1 / -1;
+}
+.cell {
+  aspect-ratio: 1/1;
+  border: 1px solid thistle;
 }
