@@ -41,6 +41,7 @@ class Ship {
   }
 }
 
+// Enemy Ships
 const destroyer = new Ship("destroyer", 2);
 const submarine = new Ship("submarine", 3);
 const cruiser = new Ship("cruiser", 3);
@@ -80,5 +81,30 @@ const addShipToGrid = (ship: Ship) => {
     }
   }
 };
-
 allShips.forEach((ship) => addShipToGrid(ship));
+
+// Drag Ships
+const onDragStart = (e: MouseEvent) => {
+  console.log(e.target);
+};
+const onDragOver = (e: DragEvent) => {
+  console.log(e.target);
+
+  e.preventDefault();
+};
+const onDrop = (e: DragEvent) => {
+  console.log(e.target);
+};
+
+const myCells = Array.from(
+  playerBoard.getElementsByClassName("cell")
+) as HTMLElement[];
+myCells.forEach((cell) => {
+  cell.addEventListener("dragover", onDragOver);
+  cell.addEventListener("drop", onDrop);
+});
+
+const ships = Array.from(
+  document.querySelectorAll("#ships div")
+) as HTMLElement[];
+ships.forEach((ship) => ship.addEventListener("mousedown", onDragStart));
