@@ -94,7 +94,24 @@ button:focus-visible {
 .board p {
   grid-column: 1 / -1;
 }
+
+/* Cell */
 .cell {
   aspect-ratio: 1/1;
   border: 1px solid thistle;
+}
+.destroyer.taken {
+  background: gold;
+}
+.submarine.taken {
+  background: tomato;
+}
+.cruiser.taken {
+  background: green;
+}
+.battleship.taken {
+  background: blueviolet;
+}
+.career.taken {
+  background: sienna;
 }

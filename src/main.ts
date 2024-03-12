@@ -30,3 +30,55 @@ createGrid(playerBoard);
 
 const computerBoard = document.getElementById("computer")!;
 createGrid(computerBoard);
+
+// Ship Class
+class Ship {
+  name: string;
+  size: number;
+  constructor(_name: string, _size: number) {
+    this.name = _name;
+    this.size = _size;
+  }
+}
+
+const destroyer = new Ship("destroyer", 2);
+const submarine = new Ship("submarine", 3);
+const cruiser = new Ship("cruiser", 3);
+const battleship = new Ship("battleship", 4);
+const career = new Ship("career", 5);
+
+const allShips = [destroyer, submarine, cruiser, battleship, career];
+
+const addShipToGrid = (ship: Ship) => {
+  const cells = Array.from(
+    computerBoard.getElementsByClassName("cell")
+  ) as HTMLElement[];
+
+  while (true) {
+    const horizontal = Math.random() < 0.5;
+    const x = horizontal
+      ? Math.floor(Math.random() * 10)
+      : Math.floor(Math.random() * (10 - ship.size));
+    const y = horizontal
+      ? Math.floor(Math.random() * (10 - ship.size))
+      : Math.floor(Math.random() * 10);
+
+    const spots = new Array(ship.size)
+      .fill(-1)
+      .map((_, i) => {
+        if (horizontal) {
+          return x * 10 + y + i;
+        } else {
+          return x * 10 + y + i * 10;
+        }
+      })
+      .map((i) => cells[i]);
+
+    if (spots.every((spot) => !spot.classList.contains("taken"))) {
+      spots.forEach((spot) => spot.classList.add("taken", ship.name));
+      break;
+    }
+  }
+};
+
+allShips.forEach((ship) => addShipToGrid(ship));
