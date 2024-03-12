@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+}
+
+#app {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #646cff;
+  color: wheat;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+#ships {
+  vertical-align: bottom;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+#ships div {
+  height: 20px;
+  background: indigo;
+  display: inline-block;
+  border-radius: 3px;
+}
+.destroyer {
+  aspect-ratio: 2/1;
+}
+.submarine {
+  aspect-ratio: 3/1;
+}
+.cruiser {
+  aspect-ratio: 3/1;
+}
+.battleship {
+  aspect-ratio: 4/1;
+}
+.career {
+  aspect-ratio: 5/1;
+}
+
+#ships div.rotated {
+  width: 20px;
+  height: auto;
+}
+.destroyer.rotated {
+  aspect-ratio: 1/2;
+}
+.submarine.rotated {
+  aspect-ratio: 1/3;
+}
+.cruiser.rotated {
+  aspect-ratio: 1/3;
+}
+.battleship.rotated {
+  aspect-ratio: 1/4;
+}
+.career.rotated {
+  aspect-ratio: 1/5;
+}
