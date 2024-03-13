@@ -111,6 +111,10 @@ const checkValidDropTarget = (id: number) => {
   const x = Math.floor(id / 10);
   const y = id - x * 10;
 
+  const cells = getShipCells(size, x, y, isFlipped, "player");
+  if (cells.some((cell) => cell && cell.classList.contains("taken")))
+    return false;
+
   if (!isFlipped) {
     if (size + y > 10) return false;
     else return true;
