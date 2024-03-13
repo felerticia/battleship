@@ -5,7 +5,7 @@ const messages = {
   start: "Please click start to proceed",
   "your turn": "Your turn! Find and destroy all five enemy ships",
   won: "You won!!",
-  lost: "Tough luck!!",
+  lost: "Tough luck!! Computer won!",
   hit: "Boom, enemy ship is hit",
   miss: "Oops, nothing there",
   "already hit": "This cell is already hit. Try a new target",
@@ -238,7 +238,24 @@ const computerHits: string[] = [];
 const playerSunkShips: string[] = [];
 const computerSunkShips: string[] = [];
 
+const checkGameOver = () => {
+  if (playerSunkShips.length === 5) {
+    changeMessage(messages.won);
+    gameOver = true;
+    return;
+  }
+  if (computerSunkShips.length === 5) {
+    changeMessage(messages.lost);
+    gameOver = true;
+    return;
+  }
+};
+
 const computerTurn = () => {
+  checkGameOver();
+
+  if (gameOver) return;
+
   changeMessage(messages.computer);
   setTimeout(() => {
     const validTargets = myCells.filter(
@@ -251,18 +268,27 @@ const computerTurn = () => {
     if (target.classList.contains("taken")) {
       const shipType = target.classList.toString().split("cell taken ")[1];
       computerHits.push(shipType);
-      changeMessage(messages["computer hit"]);
+
       target.classList.add("hit");
+      if (checkSunkShip(shipType)) {
+        changeMessage(messages[shipType as keyof typeof messages]);
+      } else {
+        changeMessage(messages["computer hit"]);
+      }
     } else {
       changeMessage(messages["computer miss"]);
       target.classList.add("miss");
     }
-  }, 1000);
+  }, 750);
 
   setTimeout(() => {
+    checkGameOver();
+    if (gameOver) {
+      return;
+    }
     changeMessage(messages["your turn"]);
     turn = "player";
-  }, 2000);
+  }, 1500);
 };
 
 const checkSunkShip = (shipType: string) => {
@@ -283,6 +309,8 @@ const checkSunkShip = (shipType: string) => {
 };
 
 const handlePlayerClick = (e: MouseEvent) => {
+  checkGameOver();
+
   if (gameOver) return;
 
   if (turn === "player") {
@@ -307,7 +335,7 @@ const handlePlayerClick = (e: MouseEvent) => {
 
     turn = "computer";
 
-    setTimeout(computerTurn, 1000);
+    setTimeout(computerTurn, 750);
   }
 };
 
