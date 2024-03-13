@@ -156,6 +156,13 @@ const onDragLeave = (e: DragEvent) => {
 
 const onDrop = (e: DragEvent) => {
   e.preventDefault();
+
+  const highlightedCells = myCells.filter((cell) => {
+    return cell.classList.contains("highlight");
+  });
+
+  if (highlightedCells.length === 0) return;
+
   myCells.forEach((cell) => {
     if (cell.classList.contains("highlight")) {
       cell.classList.remove("highlight");
@@ -163,9 +170,20 @@ const onDrop = (e: DragEvent) => {
       cell.classList.add(draggingShip);
     }
   });
-  draggableShips
-    .find((ship) => ship.classList.contains(draggingShip))
-    ?.remove();
+
+  const index = draggableShips.findIndex((ship) =>
+    ship.classList.contains(draggingShip)
+  );
+  if (index !== -1) {
+    draggableShips[index].remove(); // Remove the element from the DOM
+    draggableShips.splice(index, 1); // Remove the element from the array
+  }
+
+  if (draggableShips.length === 0) {
+    document.getElementById("rotate")?.removeEventListener("click", rotate);
+    document.getElementById("rotate")?.setAttribute("disabled", "true");
+    document.getElementById("start")?.removeAttribute("disabled");
+  }
 };
 
 myCells.forEach((cell) => {

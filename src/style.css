@@ -32,6 +32,10 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+button:disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
 
 /* Select Ships */
 #ships {
@@ -101,7 +105,7 @@ button:focus-visible {
   border: 1px solid thistle;
 }
 .cell.highlight {
-  background-color: #eee;
+  background-color: #ddd;
 }
 .destroyer.taken {
   background: gold;
