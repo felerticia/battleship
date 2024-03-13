@@ -251,6 +251,35 @@ const checkGameOver = () => {
   }
 };
 
+const getPriorityTargets = () => {
+  const hits = myCells
+    .filter((cell) => cell.classList.contains("hit"))
+    .filter((cell) => {
+      const shipRegex = /cell taken (.+?) hit/;
+      const match = cell.classList.toString().match(shipRegex);
+      const ship = match?.[1] || "";
+      return !computerSunkShips.includes(ship);
+    });
+
+  const candidateIDs = new Set();
+  hits.forEach((cell) => {
+    const id = Number(cell.id.split("cell-")[1]);
+    if (id % 10 !== 0) candidateIDs.add(id - 1);
+    if (id % 10 !== 9) candidateIDs.add(id + 1);
+    if (id > 9) candidateIDs.add(id - 10);
+    if (id < 90) candidateIDs.add(id + 10);
+  });
+
+  const validOnes = [...candidateIDs]
+    .map((id) => myCells.find((div) => div.id === `cell-${id}`))
+    .filter(
+      (cell) =>
+        !cell?.classList.contains("hit") && !cell?.classList.contains("miss")
+    );
+
+  return validOnes as HTMLElement[];
+};
+
 const computerTurn = () => {
   checkGameOver();
 
@@ -258,12 +287,19 @@ const computerTurn = () => {
 
   changeMessage(messages.computer);
   setTimeout(() => {
-    const validTargets = myCells.filter(
-      (cell) =>
-        !cell.classList.contains("miss") && !cell.classList.contains("hit")
-    );
-    const target =
-      validTargets[Math.floor(Math.random() * validTargets.length)];
+    const priorityTargets = getPriorityTargets();
+    let target;
+
+    if (priorityTargets.length) {
+      target =
+        priorityTargets[Math.floor(Math.random() * priorityTargets.length)];
+    } else {
+      const validTargets = myCells.filter(
+        (cell) =>
+          !cell.classList.contains("miss") && !cell.classList.contains("hit")
+      );
+      target = validTargets[Math.floor(Math.random() * validTargets.length)];
+    }
 
     if (target.classList.contains("taken")) {
       const shipType = target.classList.toString().split("cell taken ")[1];
