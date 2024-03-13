@@ -98,6 +98,11 @@ button:disabled {
 .board p {
   grid-column: 1 / -1;
 }
+#message {
+  font-size: 20px;
+  color: darkblue;
+  transition: opacity 0.5s ease-in-out;
+}
 
 /* Cell */
 .cell {
@@ -111,7 +116,7 @@ button:disabled {
   background: gold;
 }
 .submarine.taken {
-  background: tomato;
+  background: violet;
 }
 .cruiser.taken {
   background: green;
@@ -121,4 +126,10 @@ button:disabled {
 }
 .career.taken {
   background: sienna;
+}
+.cell.hit {
+  background-color: red;
+}
+.cell.miss {
+  background-color: #666;
 }

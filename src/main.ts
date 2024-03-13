@@ -1,5 +1,28 @@
 import "./style.css";
 
+const messages = {
+  init: "Drag your ships to the map.",
+  start: "Please click start to proceed",
+  "your turn":
+    "Click on the cells of the enemy's map to find and destroy all five enemy ships",
+  won: "You won!!",
+  lost: "Tough luck!!",
+  hit: "Boom, enemy ship is hit",
+  miss: "Oops, nothing there",
+  "already hit": "This cell is already hit. Try a new target",
+};
+
+const messageContainer = document.getElementById("message") as HTMLElement;
+const changeMessage = (newText: string) => {
+  messageContainer.style.opacity = "0";
+
+  setTimeout(() => {
+    messageContainer.innerHTML = newText;
+    messageContainer.style.opacity = "1";
+  }, 500);
+};
+changeMessage(messages.init);
+
 // Rotate options
 let isFlipped = false;
 const rotate = () => {
@@ -27,7 +50,6 @@ const createGrid = (element: HTMLElement) => {
 };
 const playerBoard = document.getElementById("player")!;
 createGrid(playerBoard);
-
 const computerBoard = document.getElementById("computer")!;
 createGrid(computerBoard);
 
@@ -102,6 +124,9 @@ const myCells = Array.from(
 ) as HTMLElement[];
 const draggableShips = Array.from(
   document.querySelectorAll("#ships div")
+) as HTMLElement[];
+const computerCells = Array.from(
+  computerBoard.getElementsByClassName("cell")
 ) as HTMLElement[];
 
 let draggingShip: string = "";
@@ -183,6 +208,7 @@ const onDrop = (e: DragEvent) => {
     document.getElementById("rotate")?.removeEventListener("click", rotate);
     document.getElementById("rotate")?.setAttribute("disabled", "true");
     document.getElementById("start")?.removeAttribute("disabled");
+    changeMessage(messages.start);
   }
 };
 
@@ -195,3 +221,36 @@ myCells.forEach((cell) => {
 draggableShips.forEach((ship) => {
   ship.addEventListener("dragstart", onDragStart);
 });
+
+// Game stats
+let gameOver: boolean = false;
+let turn: "player" | "computer" = "computer";
+
+const handlePlayerClick = (e: MouseEvent) => {
+  if (gameOver) return;
+
+  if (turn === "player") {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains("hit") || target.classList.contains("miss")) {
+      changeMessage(messages["already hit"]);
+      return;
+    }
+    if (target.classList.contains("taken")) {
+      target.classList.add("hit");
+      changeMessage(messages.hit);
+    } else {
+      target.classList.add("miss");
+      changeMessage(messages.miss);
+    }
+  }
+};
+
+const startGame = () => {
+  turn = "player";
+  computerCells.forEach((cell) => {
+    cell.addEventListener("click", handlePlayerClick);
+  });
+  document.getElementById("start")?.setAttribute("disabled", "true");
+  changeMessage(messages["your turn"]);
+};
+document.getElementById("start")?.addEventListener("click", startGame);
