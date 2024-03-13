@@ -100,7 +100,7 @@ allShips.forEach((ship) => addShipToGrid(ship));
 const myCells = Array.from(
   playerBoard.getElementsByClassName("cell")
 ) as HTMLElement[];
-const ships = Array.from(
+const draggableShips = Array.from(
   document.querySelectorAll("#ships div")
 ) as HTMLElement[];
 
@@ -135,6 +135,7 @@ const onDragStart = (e: MouseEvent) => {
 };
 
 const onDragOver = (e: DragEvent) => {
+  e.preventDefault();
   const targetID = (e.target as HTMLElement).id;
   const id = Number(targetID.split("cell-")[1]);
   const isValidDrop = checkValidDropTarget(id);
@@ -143,12 +144,24 @@ const onDragOver = (e: DragEvent) => {
   }
 };
 const onDragLeave = (e: DragEvent) => {
+  e.preventDefault();
   myCells.forEach((cell) => {
     cell.classList.remove("highlight");
   });
 };
+
 const onDrop = (e: DragEvent) => {
-  //console.log(e.target);
+  e.preventDefault();
+  myCells.forEach((cell) => {
+    if (cell.classList.contains("highlight")) {
+      cell.classList.remove("highlight");
+      cell.classList.add("taken");
+      cell.classList.add(draggingShip);
+    }
+  });
+  draggableShips
+    .find((ship) => ship.classList.contains(draggingShip))
+    ?.remove();
 };
 
 myCells.forEach((cell) => {
@@ -157,4 +170,6 @@ myCells.forEach((cell) => {
   cell.addEventListener("drop", onDrop);
 });
 
-ships.forEach((ship) => ship.addEventListener("mousedown", onDragStart));
+draggableShips.forEach((ship) => {
+  ship.addEventListener("dragstart", onDragStart);
+});
