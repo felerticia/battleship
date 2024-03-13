@@ -112,24 +112,24 @@ button:disabled {
 .cell.highlight {
   background-color: #ddd;
 }
-.destroyer.taken {
+#player .destroyer.taken {
   background: gold;
 }
-.submarine.taken {
+#player .submarine.taken {
   background: violet;
 }
-.cruiser.taken {
+#player .cruiser.taken {
   background: green;
 }
-.battleship.taken {
+#player .battleship.taken {
   background: blueviolet;
 }
-.career.taken {
+#player .career.taken {
   background: sienna;
 }
 .cell.hit {
-  background-color: red;
+  background-color: red !important;
 }
 .cell.miss {
-  background-color: #666;
+  background-color: #999 !important;
 }
