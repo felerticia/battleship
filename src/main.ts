@@ -9,10 +9,14 @@ const messages = {
   hit: "Boom, enemy ship is hit",
   miss: "Oops, nothing there",
   "already hit": "This cell is already hit. Try a new target",
-
   computer: "Computer thinking...",
   "computer hit": "Computer hit your ship",
   "computer miss": "Computer missed",
+  destroyer: "A destroyer is sunk!",
+  submarine: "A submarine is sunk!",
+  cruiser: "A cruiser is sunk!",
+  battleship: "A battleship is sunk!",
+  career: "A career is sunk!",
 };
 
 const messageContainer = document.getElementById("message") as HTMLElement;
@@ -231,6 +235,9 @@ let turn: "player" | "computer" = "computer";
 const playerHits: string[] = [];
 const computerHits: string[] = [];
 
+const playerSunkShips: string[] = [];
+const computerSunkShips: string[] = [];
+
 const computerTurn = () => {
   changeMessage(messages.computer);
   setTimeout(() => {
@@ -258,6 +265,23 @@ const computerTurn = () => {
   }, 2000);
 };
 
+const checkSunkShip = (shipType: string) => {
+  const size = allShips.find((ship) => ship.name === shipType)!.size;
+  const sunkSize =
+    turn === "player"
+      ? playerHits.filter((hit) => hit === shipType).length
+      : computerHits.filter((hit) => hit === shipType).length;
+
+  if (size === sunkSize) {
+    turn === "player"
+      ? playerSunkShips.push(shipType)
+      : computerSunkShips.push(shipType);
+
+    return true;
+  }
+  return false;
+};
+
 const handlePlayerClick = (e: MouseEvent) => {
   if (gameOver) return;
 
@@ -271,11 +295,16 @@ const handlePlayerClick = (e: MouseEvent) => {
       const shipType = target.classList.toString().split("cell taken ")[1];
       playerHits.push(shipType);
       target.classList.add("hit");
-      changeMessage(messages.hit);
+      if (checkSunkShip(shipType)) {
+        changeMessage(messages[shipType as keyof typeof messages]);
+      } else {
+        changeMessage(messages.hit);
+      }
     } else {
       target.classList.add("miss");
       changeMessage(messages.miss);
     }
+
     turn = "computer";
 
     setTimeout(computerTurn, 1000);
