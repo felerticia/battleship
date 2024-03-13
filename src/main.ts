@@ -3,13 +3,16 @@ import "./style.css";
 const messages = {
   init: "Drag your ships to the map.",
   start: "Please click start to proceed",
-  "your turn":
-    "Click on the cells of the enemy's map to find and destroy all five enemy ships",
+  "your turn": "Your turn! Find and destroy all five enemy ships",
   won: "You won!!",
   lost: "Tough luck!!",
   hit: "Boom, enemy ship is hit",
   miss: "Oops, nothing there",
   "already hit": "This cell is already hit. Try a new target",
+
+  computer: "Computer thinking...",
+  "computer hit": "Computer hit your ship",
+  "computer miss": "Computer missed",
 };
 
 const messageContainer = document.getElementById("message") as HTMLElement;
@@ -19,7 +22,7 @@ const changeMessage = (newText: string) => {
   setTimeout(() => {
     messageContainer.innerHTML = newText;
     messageContainer.style.opacity = "1";
-  }, 500);
+  }, 250);
 };
 changeMessage(messages.init);
 
@@ -225,6 +228,35 @@ draggableShips.forEach((ship) => {
 // Game stats
 let gameOver: boolean = false;
 let turn: "player" | "computer" = "computer";
+const playerHits: string[] = [];
+const computerHits: string[] = [];
+
+const computerTurn = () => {
+  changeMessage(messages.computer);
+  setTimeout(() => {
+    const validTargets = myCells.filter(
+      (cell) =>
+        !cell.classList.contains("miss") && !cell.classList.contains("hit")
+    );
+    const target =
+      validTargets[Math.floor(Math.random() * validTargets.length)];
+
+    if (target.classList.contains("taken")) {
+      const shipType = target.classList.toString().split("cell taken ")[1];
+      computerHits.push(shipType);
+      changeMessage(messages["computer hit"]);
+      target.classList.add("hit");
+    } else {
+      changeMessage(messages["computer miss"]);
+      target.classList.add("miss");
+    }
+  }, 1000);
+
+  setTimeout(() => {
+    changeMessage(messages["your turn"]);
+    turn = "player";
+  }, 2000);
+};
 
 const handlePlayerClick = (e: MouseEvent) => {
   if (gameOver) return;
@@ -236,12 +268,17 @@ const handlePlayerClick = (e: MouseEvent) => {
       return;
     }
     if (target.classList.contains("taken")) {
+      const shipType = target.classList.toString().split("cell taken ")[1];
+      playerHits.push(shipType);
       target.classList.add("hit");
       changeMessage(messages.hit);
     } else {
       target.classList.add("miss");
       changeMessage(messages.miss);
     }
+    turn = "computer";
+
+    setTimeout(computerTurn, 1000);
   }
 };
 
